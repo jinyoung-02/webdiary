@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oong의 비밀 일기장</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+  <!-- 💡 style.css 연결 -->
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+
+  <!-- 다이어리 전체 감싸는 메인 틀 추가 -->
+  <div class="diary-container">
+
+  <!-- 1. 표지 화면 -->
+    <div id="lockScreen" class="lock-screen">
+      <!-- 🐾 통통 튀는 발자국 이미지 버튼 -->
+      <img src="paws.png" class="paw-click-area" onclick="openDiary()" title="곰발자국을 눌러서 열기" alt="곰발자국">
+    </div>
+
+    <!-- 2. 일기장 메인 공간 -->
+    <div id="diaryMainContent" class="diary-main-content">
+      
+      <div id="tabMenu" class="tab-menu" style="display: none;">
+        <button id="tabCalendar" class="tab-btn active" onclick="switchTab('calendar')">📅 달력 보기</button>
+        <button id="tabAdmin" class="tab-btn" onclick="switchTab('admin')">👑 관리자 공간 (비밀글/휴지통)</button>
+      </div>
+
+      <!-- 달력 영역 -->
+      <div id="calendarSection">
+      <div class="calendar-header">
+        <button class="nav-btn" onclick="changeMonth(-1)" title="이전달">❮</button>
+        <div class="calendar-title-group">
+          <select id="selectYear" class="year-month-select" onchange="onSelectYearMonthChange()"></select>
+          <select id="selectMonth" class="year-month-select" onchange="onSelectYearMonthChange()"></select>
+        </div>
+          <button class="nav-btn" onclick="changeMonth(1)" title="다음달">❯</button>
+      </div>
+
+        <div class="calendar-grid">
+          <div class="day-header sun">일</div>
+          <div class="day-header">월</div>
+          <div class="day-header">화</div>
+          <div class="day-header">수</div>
+          <div class="day-header">목</div>
+          <div class="day-header">금</div>
+          <div class="day-header sat">토</div>
+        </div>
+
+        <div id="calendarDates" class="calendar-grid"></div>
+
+        <div class="action-buttons">
+          <button class="btn-main" onclick="openWriteModal()">✏️ 새 일기 쓰기</button>
+          <button id="adminLoginBtn" class="btn-admin-login" onclick="toggleAdminLogin()">👑 관리자 인증</button>
+        </div>
+      </div>
+
+      <!-- 관리자 전용 공간 -->
+      <div id="adminSection" class="admin-section">
+        <h2 style="color: #5a4636;">🔒 비밀글 목록</h2>
+        <div id="secretList"></div>
+
+        <h2 style="color: #5a4636; margin-top: 30px;">🗑️ 휴지통 (삭제된 일기)</h2>
+        <div id="trashList"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 일기 보기 모달 팝업 -->
+  <div id="viewModalOverlay" class="modal-overlay">
+    <div class="modal-card">
+      <div id="viewModalDate" class="modal-date">2026년 9월 9일 수요일</div>
+      
+      <div id="authorTabs" class="author-tabs"></div>
+
+      <div id="viewModalText" class="modal-text">일기 내용</div>
+      
+      <div class="modal-btn-group">
+        <button id="editBtn" class="btn-edit" onclick="editCurrentDiary()" style="display:none;">✏️ 수정</button>
+        <button id="deleteBtn" class="btn-delete" onclick="deleteCurrentDiary()" style="display:none;">🗑️ 삭제</button>
+        <button class="btn-cancel" onclick="closeViewModal()">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 새 일기 쓰기 / 수정 모달 팝업 -->
+  <div id="writeModalOverlay" class="modal-overlay">
+    <div class="modal-card">
+      <div id="writeModalTitle" class="modal-date">✏️ 새 일기 작성하기</div>
+      
+      <div class="form-group">
+        <label for="inputDate">날짜 선택</label>
+        <input type="date" id="inputDate" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label for="inputAuthor">작성자 선택</label>
+        <select id="inputAuthor" class="form-control">
+          <option value="옹심">옹심 🐾</option>
+          <option value="휴">휴 🌿</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="inputIsSecret">공개 여부</label>
+        <select id="inputIsSecret" class="form-control">
+          <option value="false">🌐 전체 공개</option>
+          <option value="true">🔒 비밀글 (관리자만 보기)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="inputContent">일기 내용</label>
+        <textarea id="inputContent" class="form-control" placeholder="오늘 어떤 일이 있었나요?"></textarea>
+      </div>
+
+      <div class="modal-btn-group">
+        <button class="btn-cancel" onclick="closeWriteModal()">취소</button>
+        <button class="btn-submit" onclick="saveDiary()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💡 script.js 연결 -->
+  <script src="script.js"></script>
+</body>
+</html>
