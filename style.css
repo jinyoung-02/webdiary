@@ -149,29 +149,6 @@ body {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
-.tab-menu {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.tab-btn {
-  background-color: #f2ebd9;
-  border: 1px solid #d3c4b1;
-  padding: 8px 18px;
-  font-size: 1.2rem;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #5a4636;
-}
-
-.tab-btn.active {
-  background-color: #b5835a;
-  color: white;
-  border-color: #b5835a;
-}
-
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -259,6 +236,30 @@ body {
   font-size: 1.1rem;
   border-radius: 15px;
   cursor: pointer;
+}
+
+.btn-icon {
+  background-color: #b5835a;
+  color: white;
+  border: none;
+  width: 42px;
+  height: 42px;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: #8c6239;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+  padding: 0;
 }
 
 .admin-section { display: none; text-align: left; }

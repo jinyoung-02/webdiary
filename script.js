@@ -95,17 +95,20 @@ function toggleAdminLogin() {
 
 function updateAdminUI() {
   const adminLoginBtn = document.getElementById("adminLoginBtn");
-  const tabMenu = document.getElementById("tabMenu");
   const newDiaryBtn = document.getElementById("newDiaryBtn");
+  const secretListBtn = document.getElementById("secretListBtn");
+  const trashListBtn = document.getElementById("trashListBtn");
 
   if (isAdmin) {
     adminLoginBtn.innerText = "🔓 인증 해제";
-    tabMenu.style.display = "flex";
     newDiaryBtn.style.display = "none";
+    secretListBtn.style.display = "flex";
+    trashListBtn.style.display = "flex";
   } else {
     adminLoginBtn.innerText = "👑 관리자 인증";
-    tabMenu.style.display = "none";
     newDiaryBtn.style.display = "inline-block";
+    secretListBtn.style.display = "none";
+    trashListBtn.style.display = "none";
     switchTab('calendar');
   }
   renderCalendar();
@@ -114,20 +117,14 @@ function updateAdminUI() {
 
 function switchTab(tabName) {
   const calendarSection = document.getElementById("calendarSection");
-  const adminSection = document.getElementById("adminSection");
-  const tabCalendar = document.getElementById("tabCalendar");
-  const tabAdmin = document.getElementById("tabAdmin");
+  const secretSection = document.getElementById("secretSection");
+  const trashSection = document.getElementById("trashSection");
 
-  if (tabName === 'calendar') {
-    calendarSection.style.display = "block";
-    adminSection.style.display = "none";
-    tabCalendar.classList.add("active");
-    tabAdmin.classList.remove("active");
-  } else {
-    calendarSection.style.display = "none";
-    adminSection.style.display = "block";
-    tabCalendar.classList.remove("active");
-    tabAdmin.classList.add("active");
+  calendarSection.style.display = tabName === 'calendar' ? "block" : "none";
+  secretSection.style.display = tabName === 'secret' ? "block" : "none";
+  trashSection.style.display = tabName === 'trash' ? "block" : "none";
+
+  if (tabName !== 'calendar') {
     renderAdminSection();
   }
 }
