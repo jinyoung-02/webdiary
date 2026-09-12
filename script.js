@@ -96,13 +96,16 @@ function toggleAdminLogin() {
 function updateAdminUI() {
   const adminLoginBtn = document.getElementById("adminLoginBtn");
   const tabMenu = document.getElementById("tabMenu");
+  const newDiaryBtn = document.getElementById("newDiaryBtn");
 
   if (isAdmin) {
     adminLoginBtn.innerText = "🔓 인증 해제";
     tabMenu.style.display = "flex";
+    newDiaryBtn.style.display = "none";
   } else {
     adminLoginBtn.innerText = "👑 관리자 인증";
     tabMenu.style.display = "none";
+    newDiaryBtn.style.display = "inline-block";
     switchTab('calendar');
   }
   renderCalendar();
