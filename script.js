@@ -115,18 +115,15 @@ function toggleAdminLogin() {
 }
 
 function updateAdminUI() {
-  const adminLoginBtn = document.getElementById("adminLoginBtn");
   const newDiaryBtn = document.getElementById("newDiaryBtn");
   const secretListBtn = document.getElementById("secretListBtn");
   const trashListBtn = document.getElementById("trashListBtn");
 
   if (isAdmin) {
-    adminLoginBtn.innerText = "🔓 인증 해제";
     newDiaryBtn.style.display = "none";
     secretListBtn.style.display = "flex";
     trashListBtn.style.display = "flex";
   } else {
-    adminLoginBtn.innerText = "👑 관리자 인증";
     newDiaryBtn.style.display = "inline-block";
     secretListBtn.style.display = "none";
     trashListBtn.style.display = "none";
@@ -135,6 +132,36 @@ function updateAdminUI() {
   renderCalendar();
   renderAdminSection();
 }
+
+// 🐻 곰 그림을 길게 누르면(0.6초) 관리자 인증/해제가 트리거되는 숨겨진 진입점
+function setupAdminHotspot() {
+  const hotspot = document.getElementById("adminHotspot");
+  if (!hotspot) return;
+
+  let pressTimer = null;
+
+  const startPress = () => {
+    pressTimer = setTimeout(() => {
+      pressTimer = null;
+      toggleAdminLogin();
+    }, 600);
+  };
+
+  const cancelPress = () => {
+    if (pressTimer) {
+      clearTimeout(pressTimer);
+      pressTimer = null;
+    }
+  };
+
+  hotspot.addEventListener("mousedown", startPress);
+  hotspot.addEventListener("touchstart", startPress, { passive: true });
+  ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((evt) =>
+    hotspot.addEventListener(evt, cancelPress)
+  );
+}
+
+setupAdminHotspot();
 
 function switchTab(tabName) {
   const calendarSection = document.getElementById("calendarSection");

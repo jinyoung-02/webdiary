@@ -50,9 +50,11 @@
           <button id="newDiaryBtn" class="btn-main" onclick="openWriteModal()">✏️ 새 일기 쓰기</button>
           <button id="secretListBtn" class="btn-icon" onclick="switchTab('secret')" title="비밀글 목록">🔒</button>
           <button id="trashListBtn" class="btn-icon" onclick="switchTab('trash')" title="휴지통">🗑️</button>
-          <button id="adminLoginBtn" class="btn-admin-login" onclick="toggleAdminLogin()">👑 관리자 인증</button>
         </div>
       </div>
+
+      <!-- 🐻 곰 그림 근처를 길게 누르면 관리자 인증/해제 (숨겨진 진입점) -->
+      <div id="adminHotspot" class="admin-hotspot" title=""></div>
 
       <!-- 관리자 전용 공간: 비밀글 목록 -->
       <div id="secretSection" class="admin-section">
