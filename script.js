@@ -310,7 +310,7 @@ function onSelectYearMonthChange() {
 // ==========================================
 // 📖 일기 및 일정 상세보기 모달
 // ==========================================
-function openViewModal(dateKey, skipEmptyRedirect = false) {
+function openViewModal(dateKey) {
   selectedDateKey = dateKey;
 
   const year = parseInt(dateKey.split('-')[0]);
@@ -319,12 +319,6 @@ function openViewModal(dateKey, skipEmptyRedirect = false) {
 
   const anniList = getAnniversaries(year, month, day);
   const entry = diaryData[dateKey];
-
-  // 1. 일기도 없고 기념일도 없으면 바로 일기 작성창으로 (좌우 이동 중에는 건너뜀)
-  if (!entry && anniList.length === 0 && !skipEmptyRedirect) {
-    openWriteModal(dateKey);
-    return;
-  }
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
   document.getElementById("viewWriteBtn").style.display = entry ? "none" : "flex";
@@ -374,7 +368,7 @@ function formatDateKey(dateObj) {
 function navigateEntry(direction) {
   const [y, m, d] = selectedDateKey.split('-').map(Number);
   const newDate = new Date(y, m - 1, d + direction);
-  openViewModal(formatDateKey(newDate), true);
+  openViewModal(formatDateKey(newDate));
 }
 
 // 📱 모바일: 일기 보기 모달에서 좌우로 스와이프하면 이전/다음 글로 이동
