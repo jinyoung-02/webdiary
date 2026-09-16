@@ -369,12 +369,12 @@ function openWriteModal(targetDateKey = "", isEdit = false) {
 
   if (isEdit && diaryData[targetDateKey]) {
     const entry = diaryData[targetDateKey];
-    titleElement.innerText = "✏️ 일기 수정하기";
+    titleElement.innerText = "일기 수정하기";
     dateInput.value = targetDateKey;
     dateInput.disabled = true;
     document.getElementById("inputContent").value = entry.content;
   } else {
-    titleElement.innerText = "✏️ 새 일기 작성하기";
+    titleElement.innerText = "새 일기 작성하기";
     dateInput.disabled = false;
     dateInput.value = targetDateKey || new Date().toISOString().substring(0, 10);
     document.getElementById("inputContent").value = "";

@@ -358,8 +358,10 @@ body {
   min-height: 100px;
 }
 
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 1.2rem; color: #5a4636; margin-bottom: 5px; }
+.write-modal-title { margin-bottom: 22px; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 1rem; color: #a89684; margin-bottom: 6px; }
 .form-control {
   width: 100%; padding: 8px 12px; font-size: 1.1rem;
   border: 1px solid #d3c4b1; border-radius: 8px; background-color: #fff;
