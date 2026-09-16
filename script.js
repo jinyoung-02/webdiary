@@ -327,6 +327,7 @@ function openViewModal(dateKey) {
   }
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
+  document.getElementById("viewWriteBtn").style.display = entry ? "none" : "flex";
 
   const modalInfo = document.getElementById("modalInfo");
   modalInfo.innerHTML = "";
