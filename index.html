@@ -76,7 +76,11 @@
   <div id="viewModalOverlay" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-date-row">
-        <div id="viewModalDate" class="modal-date">2026년 9월 9일 수요일</div>
+        <div class="modal-date-nav">
+          <button id="prevEntryBtn" class="modal-nav-arrow" onclick="navigateEntry(-1)" title="이전 글">‹</button>
+          <div id="viewModalDate" class="modal-date">2026년 9월 9일 수요일</div>
+          <button id="nextEntryBtn" class="modal-nav-arrow" onclick="navigateEntry(1)" title="다음 글">›</button>
+        </div>
         <button id="viewWriteBtn" class="btn-icon-small" onclick="openNewEntryFromView()" title="새 일기 쓰기">✏️</button>
       </div>
 

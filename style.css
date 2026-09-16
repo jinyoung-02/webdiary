@@ -325,10 +325,37 @@ body {
   margin-bottom: 20px;
 }
 
+.modal-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .modal-date {
   font-size: 1.3rem;
   color: #8c735d;
   font-weight: bold;
+}
+
+.modal-nav-arrow {
+  background: none;
+  border: none;
+  color: #c9bba8;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.modal-nav-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .modal-nav-arrow {
+    display: none;
+  }
 }
 
 .btn-icon-small {

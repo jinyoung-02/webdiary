@@ -328,6 +328,7 @@ function openViewModal(dateKey) {
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
   document.getElementById("viewWriteBtn").style.display = entry ? "none" : "flex";
+  updateEntryNavButtons(dateKey, entry);
 
   const modalInfo = document.getElementById("modalInfo");
   modalInfo.innerHTML = "";
@@ -362,6 +363,62 @@ function openViewModal(dateKey) {
 function closeViewModal() {
   document.getElementById("viewModalOverlay").style.display = "none";
 }
+
+// 글이 있는 날짜끼리만 좌우로 이동 (PC 화살표 + 모바일 스와이프 공용)
+function getEntryDateKeys() {
+  return Object.keys(diaryData).sort();
+}
+
+function updateEntryNavButtons(dateKey, entry) {
+  const prevBtn = document.getElementById("prevEntryBtn");
+  const nextBtn = document.getElementById("nextEntryBtn");
+  const keys = getEntryDateKeys();
+  const idx = keys.indexOf(dateKey);
+
+  if (!entry || idx === -1) {
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+
+  prevBtn.disabled = idx <= 0;
+  nextBtn.disabled = idx >= keys.length - 1;
+}
+
+function navigateEntry(direction) {
+  const keys = getEntryDateKeys();
+  const idx = keys.indexOf(selectedDateKey);
+  if (idx === -1) return;
+
+  const nextIdx = idx + direction;
+  if (nextIdx < 0 || nextIdx >= keys.length) return;
+
+  openViewModal(keys[nextIdx]);
+}
+
+// 📱 모바일: 일기 보기 모달에서 좌우로 스와이프하면 이전/다음 글로 이동
+function setupSwipeNavigation() {
+  const card = document.querySelector('#viewModalOverlay .modal-card');
+  if (!card) return;
+
+  let startX = 0;
+  let startY = 0;
+
+  card.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  card.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navigateEntry(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+}
+
+setupSwipeNavigation();
 
 function openWriteModal(targetDateKey = "", isEdit = false) {
   const titleElement = document.getElementById("writeModalTitle");
