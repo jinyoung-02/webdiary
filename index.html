@@ -84,9 +84,10 @@
         <button id="viewWriteBtn" class="btn-icon-small" onclick="openNewEntryFromView()" title="새 일기 쓰기">✏️</button>
       </div>
 
-      <div id="modalInfo" class="author-tabs"></div>
-
-      <div id="viewModalText" class="modal-text">일기 내용</div>
+      <div class="modal-scroll-area">
+        <div id="modalInfo" class="author-tabs"></div>
+        <div id="viewModalText" class="modal-text">일기 내용</div>
+      </div>
 
       <div class="modal-btn-group">
         <button id="deleteBtn" class="btn-delete-text" onclick="deleteCurrentDiary()" style="display:none;">삭제</button>
