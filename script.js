@@ -2,8 +2,8 @@ const COVER_PASSWORD = "12150209"; // 표지 열 때 쓰는 비밀번호
 const ADMIN_PASSWORD = "260118"; // 관리자 인증할 때 쓸 비밀번호
 let isAdmin = false;
 
-// 💡 일기 데이터 (localStorage 연동)
-let diaryData = JSON.parse(localStorage.getItem("oong_diary_data")) || {
+// 💡 일기 데이터 (서버 API 연동, 로딩 전까지 쓰이는 기본값)
+let diaryData = {
   "2026-09-09": [
     {
       id: 1,
@@ -20,15 +20,35 @@ let diaryData = JSON.parse(localStorage.getItem("oong_diary_data")) || {
   ]
 };
 
-let trashData = JSON.parse(localStorage.getItem("oong_trash_data")) || [];
+let trashData = [];
 
 let currentDate = new Date(2026, 8, 1);
 let selectedDateKey = "";
 let selectedEntryIndex = 0;
 
-function saveDataToStorage() {
-  localStorage.setItem("oong_diary_data", JSON.stringify(diaryData));
-  localStorage.setItem("oong_trash_data", JSON.stringify(trashData));
+async function loadDataFromServer() {
+  try {
+    const response = await fetch("/api/diary");
+    const state = await response.json();
+    diaryData = state.diaryData || {};
+    trashData = state.trashData || [];
+  } catch (e) {
+    console.error("일기 데이터를 불러오지 못했습니다.", e);
+    alert("⚠️ 서버에서 일기를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.");
+  }
+}
+
+async function saveDataToStorage() {
+  try {
+    await fetch("/api/diary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ diaryData, trashData })
+    });
+  } catch (e) {
+    console.error("일기 데이터를 저장하지 못했습니다.", e);
+    alert("⚠️ 서버 저장에 실패했습니다. 인터넷 연결을 확인해주세요.");
+  }
 }
 
 // ==========================================
@@ -57,12 +77,13 @@ function getAnniversaries(year, month, date) {
 // ==========================================
 // 🔒 화면 제어 및 관리자 인증
 // ==========================================
-function openDiary() {
+async function openDiary() {
   const inputPassword = prompt("🧸👻생일");
   if (inputPassword === COVER_PASSWORD) {
     alert("Hi, my Luv🧸♥️");
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
+    await loadDataFromServer();
     renderCalendar();
   } else if (inputPassword !== null) {
     alert("Think again.");
