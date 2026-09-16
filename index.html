@@ -123,7 +123,7 @@
     <div class="password-card">
       <div class="password-emoji">🧸</div>
       <div id="passwordModalLabel" class="password-label">비밀번호를 입력해주세요</div>
-      <input type="password" id="passwordModalInput" class="password-input" placeholder="••••••••" inputmode="numeric" autocomplete="off">
+      <div id="passwordDigitBoxes" class="password-digit-boxes"></div>
       <div id="passwordModalError" class="password-error" style="display:none;">비밀번호가 틀렸어요, 다시 시도해주세요</div>
       <button class="btn-close-pill password-confirm-btn" onclick="submitPasswordModal()">확인</button>
       <div class="password-cancel" onclick="closePasswordModal()">취소</div>

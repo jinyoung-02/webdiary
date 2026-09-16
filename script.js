@@ -1,4 +1,4 @@
-const COVER_PASSWORD = "12150209"; // 표지 열 때 쓰는 비밀번호
+const COVER_PASSWORD = "6486"; // 표지 열 때 쓰는 비밀번호
 const ADMIN_PASSWORD = "260118"; // 관리자 인증할 때 쓸 비밀번호
 let isAdmin = false;
 
@@ -93,7 +93,7 @@ function getAnniversaries(year, month, date) {
 // 🔒 화면 제어 및 관리자 인증
 // ==========================================
 function openDiary() {
-  showPasswordPrompt("🧸 생일을 입력해주세요", COVER_PASSWORD, async () => {
+  showPasswordPrompt("Hint: 휴 사랑해", COVER_PASSWORD, async () => {
     alert("Hi, my Luv🧸♥️");
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
@@ -123,17 +123,55 @@ function toggleAdminLogin() {
   }
 }
 
-// 🔐 커스텀 비밀번호 입력 모달 (표지 열기 / 관리자 인증 공용)
+// 🔐 커스텀 비밀번호 입력 모달 (표지 열기 / 관리자 인증 공용, 자릿수 박스 방식)
 let activePasswordCheck = null;
+
+function buildPasswordDigitBoxes(length) {
+  const container = document.getElementById("passwordDigitBoxes");
+  container.innerHTML = "";
+
+  for (let i = 0; i < length; i++) {
+    const box = document.createElement("input");
+    box.type = "text";
+    box.inputMode = "numeric";
+    box.maxLength = 1;
+    box.className = "password-digit-box";
+    container.appendChild(box);
+  }
+
+  const boxes = Array.from(container.querySelectorAll(".password-digit-box"));
+
+  boxes.forEach((box, idx) => {
+    box.addEventListener("input", () => {
+      box.value = box.value.replace(/[^0-9]/g, "").slice(0, 1);
+      if (box.value && idx < boxes.length - 1) {
+        boxes[idx + 1].focus();
+      }
+      if (boxes.every((b) => b.value)) {
+        submitPasswordModal();
+      }
+    });
+
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !box.value && idx > 0) {
+        boxes[idx - 1].focus();
+      } else if (e.key === "Enter") {
+        submitPasswordModal();
+      }
+    });
+  });
+}
 
 function showPasswordPrompt(label, correctPassword, onCorrect) {
   document.getElementById("passwordModalLabel").innerText = label;
-  const input = document.getElementById("passwordModalInput");
-  input.value = "";
   document.getElementById("passwordModalError").style.display = "none";
   activePasswordCheck = { correctPassword, onCorrect };
+  buildPasswordDigitBoxes(correctPassword.length);
   document.getElementById("passwordModalOverlay").style.display = "flex";
-  setTimeout(() => input.focus(), 50);
+  setTimeout(() => {
+    const firstBox = document.querySelector(".password-digit-box");
+    if (firstBox) firstBox.focus();
+  }, 50);
 }
 
 function closePasswordModal() {
@@ -143,28 +181,19 @@ function closePasswordModal() {
 
 function submitPasswordModal() {
   if (!activePasswordCheck) return;
-  const input = document.getElementById("passwordModalInput");
+  const boxes = Array.from(document.querySelectorAll(".password-digit-box"));
+  const value = boxes.map((b) => b.value).join("");
 
-  if (input.value === activePasswordCheck.correctPassword) {
+  if (value === activePasswordCheck.correctPassword) {
     const onCorrect = activePasswordCheck.onCorrect;
     closePasswordModal();
     onCorrect();
   } else {
     document.getElementById("passwordModalError").style.display = "block";
-    input.value = "";
-    input.focus();
+    boxes.forEach((b) => (b.value = ""));
+    if (boxes[0]) boxes[0].focus();
   }
 }
-
-function setupPasswordModalEnterKey() {
-  const input = document.getElementById("passwordModalInput");
-  if (!input) return;
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") submitPasswordModal();
-  });
-}
-
-setupPasswordModalEnterKey();
 
 function updateAdminUI() {
   const actionButtons = document.getElementById("actionButtons");
