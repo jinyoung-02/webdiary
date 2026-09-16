@@ -92,17 +92,14 @@ function getAnniversaries(year, month, date) {
 // ==========================================
 // 🔒 화면 제어 및 관리자 인증
 // ==========================================
-async function openDiary() {
-  const inputPassword = prompt("🧸👻생일");
-  if (inputPassword === COVER_PASSWORD) {
+function openDiary() {
+  showPasswordPrompt("🧸 생일을 입력해주세요", COVER_PASSWORD, async () => {
     alert("Hi, my Luv🧸♥️");
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     await loadDataFromServer();
     updateAdminUI();
-  } else if (inputPassword !== null) {
-    alert("Think again.");
-  }
+  });
 }
 
 function closeDiary() {
@@ -118,16 +115,56 @@ function toggleAdminLogin() {
     alert("관리자 권한을 해제했습니다.");
     updateAdminUI();
   } else {
-    const password = prompt("비밀번호를 입력하세요:");
-    if (password === ADMIN_PASSWORD) {
+    showPasswordPrompt("👑 관리자 비밀번호", ADMIN_PASSWORD, () => {
       isAdmin = true;
       alert("👻");
       updateAdminUI();
-    } else if (password !== null) {
-      alert("접근 불가");
-    }
+    });
   }
 }
+
+// 🔐 커스텀 비밀번호 입력 모달 (표지 열기 / 관리자 인증 공용)
+let activePasswordCheck = null;
+
+function showPasswordPrompt(label, correctPassword, onCorrect) {
+  document.getElementById("passwordModalLabel").innerText = label;
+  const input = document.getElementById("passwordModalInput");
+  input.value = "";
+  document.getElementById("passwordModalError").style.display = "none";
+  activePasswordCheck = { correctPassword, onCorrect };
+  document.getElementById("passwordModalOverlay").style.display = "flex";
+  setTimeout(() => input.focus(), 50);
+}
+
+function closePasswordModal() {
+  document.getElementById("passwordModalOverlay").style.display = "none";
+  activePasswordCheck = null;
+}
+
+function submitPasswordModal() {
+  if (!activePasswordCheck) return;
+  const input = document.getElementById("passwordModalInput");
+
+  if (input.value === activePasswordCheck.correctPassword) {
+    const onCorrect = activePasswordCheck.onCorrect;
+    closePasswordModal();
+    onCorrect();
+  } else {
+    document.getElementById("passwordModalError").style.display = "block";
+    input.value = "";
+    input.focus();
+  }
+}
+
+function setupPasswordModalEnterKey() {
+  const input = document.getElementById("passwordModalInput");
+  if (!input) return;
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submitPasswordModal();
+  });
+}
+
+setupPasswordModalEnterKey();
 
 function updateAdminUI() {
   const actionButtons = document.getElementById("actionButtons");

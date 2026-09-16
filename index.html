@@ -118,6 +118,18 @@
     </div>
   </div>
 
+  <!-- 비밀번호 입력 모달 (표지 열기 / 관리자 인증 공용) -->
+  <div id="passwordModalOverlay" class="modal-overlay">
+    <div class="password-card">
+      <div class="password-emoji">🧸</div>
+      <div id="passwordModalLabel" class="password-label">비밀번호를 입력해주세요</div>
+      <input type="password" id="passwordModalInput" class="password-input" placeholder="••••••••" inputmode="numeric" autocomplete="off">
+      <div id="passwordModalError" class="password-error" style="display:none;">비밀번호가 틀렸어요, 다시 시도해주세요</div>
+      <button class="btn-close-pill password-confirm-btn" onclick="submitPasswordModal()">확인</button>
+      <div class="password-cancel" onclick="closePasswordModal()">취소</div>
+    </div>
+  </div>
+
   <!-- 💡 script.js 연결 -->
   <script src="script.js"></script>
 </body>

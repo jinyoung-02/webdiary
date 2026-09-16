@@ -419,6 +419,61 @@ textarea.form-control { height: 120px; resize: vertical; }
 .btn-delete-text { background: none; border: none; color: #b5453f; padding: 6px 10px; cursor: pointer; font-size: 1.05rem; }
 .btn-close-pill { background-color: #b5835a; color: white; border: none; padding: 6px 22px; border-radius: 20px; cursor: pointer; font-size: 1.1rem; }
 
+.password-card {
+  background-color: #fffdf9;
+  border: 1px solid #ebdccb;
+  border-radius: 16px;
+  width: 85%;
+  max-width: 320px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.password-emoji {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.password-label {
+  font-size: 1.05rem;
+  color: #8c735d;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.password-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e5dbcb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 1.1rem;
+  text-align: center;
+  letter-spacing: 4px;
+  color: #5a4636;
+  background: #fff;
+  margin-bottom: 16px;
+  font-family: 'Gaegu', cursive, sans-serif;
+}
+
+.password-error {
+  font-size: 0.85rem;
+  color: #b5453f;
+  margin-bottom: 12px;
+}
+
+.password-confirm-btn {
+  width: 100%;
+  padding: 9px 0;
+}
+
+.password-cancel {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #a89684;
+  cursor: pointer;
+}
+
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
