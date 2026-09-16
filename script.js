@@ -84,7 +84,7 @@ async function openDiary() {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     await loadDataFromServer();
-    renderCalendar();
+    updateAdminUI();
   } else if (inputPassword !== null) {
     alert("Think again.");
   }
@@ -115,22 +115,31 @@ function toggleAdminLogin() {
 }
 
 function updateAdminUI() {
-  const newDiaryBtn = document.getElementById("newDiaryBtn");
+  const actionButtons = document.getElementById("actionButtons");
   const secretListBtn = document.getElementById("secretListBtn");
   const trashListBtn = document.getElementById("trashListBtn");
+  const viewWriteBtn = document.getElementById("viewWriteBtn");
 
   if (isAdmin) {
-    newDiaryBtn.style.display = "none";
+    actionButtons.style.display = "flex";
     secretListBtn.style.display = "flex";
     trashListBtn.style.display = "flex";
+    viewWriteBtn.style.display = "none";
   } else {
-    newDiaryBtn.style.display = "inline-block";
+    actionButtons.style.display = "none";
     secretListBtn.style.display = "none";
     trashListBtn.style.display = "none";
+    viewWriteBtn.style.display = "flex";
     switchTab('calendar');
   }
   renderCalendar();
   renderAdminSection();
+}
+
+function openNewEntryFromView() {
+  const dateKey = selectedDateKey;
+  closeViewModal();
+  openWriteModal(dateKey);
 }
 
 // 🐻 곰 그림을 길게 누르면(0.6초) 관리자 인증/해제가 트리거되는 숨겨진 진입점

@@ -123,7 +123,7 @@ body {
   color: #5a4636;
   background: transparent;
   border: none;
-  border-bottom: 2px dashed #b5835a;
+  border-bottom: none;
   padding: 2px 4px;
   cursor: pointer;
   outline: none;
@@ -296,13 +296,35 @@ body {
   text-align: left;
 }
 
+.modal-date-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px dashed #d3c4b1;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
 .modal-date {
   font-size: 1.3rem;
   color: #8c735d;
   font-weight: bold;
-  border-bottom: 1px dashed #d3c4b1;
-  padding-bottom: 8px;
-  margin-bottom: 15px;
+}
+
+.btn-icon-small {
+  background-color: #6b8e23;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 0.95rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .author-tabs {

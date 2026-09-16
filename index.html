@@ -46,8 +46,7 @@
 
         <div id="calendarDates" class="calendar-grid"></div>
 
-        <div class="action-buttons">
-          <button id="newDiaryBtn" class="btn-main" onclick="openWriteModal()">✏️ 새 일기 쓰기</button>
+        <div id="actionButtons" class="action-buttons">
           <button id="secretListBtn" class="btn-icon" onclick="switchTab('secret')" title="비밀글 목록">🔒</button>
           <button id="trashListBtn" class="btn-icon" onclick="switchTab('trash')" title="휴지통">🗑️</button>
         </div>
@@ -76,8 +75,11 @@
   <!-- 일기 보기 모달 팝업 -->
   <div id="viewModalOverlay" class="modal-overlay">
     <div class="modal-card">
-      <div id="viewModalDate" class="modal-date">2026년 9월 9일 수요일</div>
-      
+      <div class="modal-date-row">
+        <div id="viewModalDate" class="modal-date">2026년 9월 9일 수요일</div>
+        <button id="viewWriteBtn" class="btn-icon-small" onclick="openNewEntryFromView()" title="새 일기 쓰기">✏️</button>
+      </div>
+
       <div id="authorTabs" class="author-tabs"></div>
 
       <div id="viewModalText" class="modal-text">일기 내용</div>
