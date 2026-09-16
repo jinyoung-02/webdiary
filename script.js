@@ -310,7 +310,7 @@ function onSelectYearMonthChange() {
 // ==========================================
 // 📖 일기 및 일정 상세보기 모달
 // ==========================================
-function openViewModal(dateKey) {
+function openViewModal(dateKey, skipEmptyRedirect = false) {
   selectedDateKey = dateKey;
 
   const year = parseInt(dateKey.split('-')[0]);
@@ -320,15 +320,14 @@ function openViewModal(dateKey) {
   const anniList = getAnniversaries(year, month, day);
   const entry = diaryData[dateKey];
 
-  // 1. 일기도 없고 기념일도 없으면 바로 일기 작성창으로
-  if (!entry && anniList.length === 0) {
+  // 1. 일기도 없고 기념일도 없으면 바로 일기 작성창으로 (좌우 이동 중에는 건너뜀)
+  if (!entry && anniList.length === 0 && !skipEmptyRedirect) {
     openWriteModal(dateKey);
     return;
   }
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
   document.getElementById("viewWriteBtn").style.display = entry ? "none" : "flex";
-  updateEntryNavButtons(dateKey, entry);
 
   const modalInfo = document.getElementById("modalInfo");
   modalInfo.innerHTML = "";
@@ -352,7 +351,7 @@ function openViewModal(dateKey) {
       document.getElementById("viewModalText").innerText = entry.content;
     }
   } else {
-    // 3. 일기는 없고 기념일만 있는 경우
+    // 3. 이 날짜에 작성된 일기가 없는 경우
     document.getElementById("viewModalText").innerText = "이 날에 등록된 일기가 아직 없습니다.";
     deleteBtn.style.display = "none";
   }
@@ -364,36 +363,18 @@ function closeViewModal() {
   document.getElementById("viewModalOverlay").style.display = "none";
 }
 
-// 글이 있는 날짜끼리만 좌우로 이동 (PC 화살표 + 모바일 스와이프 공용)
-function getEntryDateKeys() {
-  return Object.keys(diaryData).sort();
-}
-
-function updateEntryNavButtons(dateKey, entry) {
-  const prevBtn = document.getElementById("prevEntryBtn");
-  const nextBtn = document.getElementById("nextEntryBtn");
-  const keys = getEntryDateKeys();
-  const idx = keys.indexOf(dateKey);
-
-  if (!entry || idx === -1) {
-    prevBtn.disabled = true;
-    nextBtn.disabled = true;
-    return;
-  }
-
-  prevBtn.disabled = idx <= 0;
-  nextBtn.disabled = idx >= keys.length - 1;
+// 날짜 하루 단위로 좌우 이동 (글이 없는 날짜도 이동 가능, PC 화살표 + 모바일 스와이프 공용)
+function formatDateKey(dateObj) {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 function navigateEntry(direction) {
-  const keys = getEntryDateKeys();
-  const idx = keys.indexOf(selectedDateKey);
-  if (idx === -1) return;
-
-  const nextIdx = idx + direction;
-  if (nextIdx < 0 || nextIdx >= keys.length) return;
-
-  openViewModal(keys[nextIdx]);
+  const [y, m, d] = selectedDateKey.split('-').map(Number);
+  const newDate = new Date(y, m - 1, d + direction);
+  openViewModal(formatDateKey(newDate), true);
 }
 
 // 📱 모바일: 일기 보기 모달에서 좌우로 스와이프하면 이전/다음 글로 이동
