@@ -324,6 +324,10 @@ body {
   min-height: 0;
 }
 
+#viewModalOverlay .modal-card {
+  height: 85vh;
+}
+
 .modal-date-row {
   display: flex;
   justify-content: space-between;
