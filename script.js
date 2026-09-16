@@ -346,7 +346,7 @@ function openViewModal(dateKey) {
     deleteBtn.style.display = isAdmin ? "inline-block" : "none";
 
     if (entry.isSecret && !isAdmin) {
-      document.getElementById("viewModalText").innerText = "🔒 이 글은 비밀글입니다.\n관리자 인증 후에만 볼 수 있습니다.";
+      document.getElementById("viewModalText").innerText = "🔒 이 글은 비밀글입니다.";
     } else {
       document.getElementById("viewModalText").innerText = entry.content;
     }
