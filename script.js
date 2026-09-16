@@ -94,11 +94,11 @@ function getAnniversaries(year, month, date) {
 // ==========================================
 function openDiary() {
   showPasswordPrompt("Hint: 휴 사랑해", COVER_PASSWORD, async () => {
-    alert("Hi, my Luv🧸♥️");
+    await loadDataFromServer();
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
-    await loadDataFromServer();
     updateAdminUI();
+    alert("Hi, my Luv🧸♥️");
   });
 }
 
