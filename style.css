@@ -320,9 +320,9 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px dashed #d3c4b1;
-  padding-bottom: 8px;
-  margin-bottom: 15px;
+  border-bottom: 1px solid #f0e6d8;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .modal-date {
@@ -351,11 +351,12 @@ body {
 }
 
 .modal-text {
-  font-size: 1.3rem;
-  color: #333;
-  line-height: 1.6;
+  font-size: 1.25rem;
+  color: #5a4636;
+  line-height: 1.75;
   white-space: pre-line;
   min-height: 100px;
+  margin-bottom: 6px;
 }
 
 .write-modal-title { margin-bottom: 22px; }
@@ -374,6 +375,8 @@ textarea.form-control { height: 120px; resize: vertical; }
 .btn-restore { background-color: #0275d8; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;}
 .btn-cancel { background-color: #ccc; color: #333; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;}
 .btn-submit { background-color: #b5835a; color: white; border: none; padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;}
+.btn-delete-text { background: none; border: none; color: #b5453f; padding: 6px 10px; cursor: pointer; font-size: 1.05rem; }
+.btn-close-pill { background-color: #b5835a; color: white; border: none; padding: 6px 22px; border-radius: 20px; cursor: pointer; font-size: 1.1rem; }
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
