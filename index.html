@@ -47,7 +47,7 @@
         <div id="calendarDates" class="calendar-grid"></div>
 
         <div id="actionButtons" class="action-buttons">
-          <button id="secretListBtn" class="btn-icon" onclick="switchTab('secret')" title="비밀글 목록">🔒</button>
+          <button id="secretListBtn" class="btn-icon" onclick="switchTab('secret')" title="전체 글 관리">📋</button>
           <button id="trashListBtn" class="btn-icon" onclick="switchTab('trash')" title="휴지통">🗑️</button>
         </div>
       </div>
@@ -55,10 +55,10 @@
       <!-- 🐻 곰 그림 근처를 길게 누르면 관리자 인증/해제 (숨겨진 진입점) -->
       <div id="adminHotspot" class="admin-hotspot" title=""></div>
 
-      <!-- 관리자 전용 공간: 비밀글 목록 -->
+      <!-- 관리자 전용 공간: 전체 글 관리 (공개/비밀 전환) -->
       <div id="secretSection" class="admin-section">
         <button class="btn-back" onclick="switchTab('calendar')">⬅️ 달력으로</button>
-        <h2 style="color: #5a4636;">🔒 비밀글 목록</h2>
+        <h2 style="color: #5a4636;">📋 전체 글 관리</h2>
         <div id="secretList"></div>
       </div>
 
@@ -80,12 +80,11 @@
         <button id="viewWriteBtn" class="btn-icon-small" onclick="openNewEntryFromView()" title="새 일기 쓰기">✏️</button>
       </div>
 
-      <div id="authorTabs" class="author-tabs"></div>
+      <div id="modalInfo" class="author-tabs"></div>
 
       <div id="viewModalText" class="modal-text">일기 내용</div>
-      
+
       <div class="modal-btn-group">
-        <button id="editBtn" class="btn-edit" onclick="editCurrentDiary()" style="display:none;">✏️ 수정</button>
         <button id="deleteBtn" class="btn-delete" onclick="deleteCurrentDiary()" style="display:none;">🗑️ 삭제</button>
         <button class="btn-cancel" onclick="closeViewModal()">닫기</button>
       </div>
@@ -100,22 +99,6 @@
       <div class="form-group">
         <label for="inputDate">날짜 선택</label>
         <input type="date" id="inputDate" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label for="inputAuthor">작성자 선택</label>
-        <select id="inputAuthor" class="form-control">
-          <option value="옹심">옹심 🐾</option>
-          <option value="휴">휴 🌿</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="inputIsSecret">공개 여부</label>
-        <select id="inputIsSecret" class="form-control">
-          <option value="false">🌐 전체 공개</option>
-          <option value="true">🔒 비밀글 (관리자만 보기)</option>
-        </select>
       </div>
 
       <div class="form-group">

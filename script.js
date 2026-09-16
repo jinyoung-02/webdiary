@@ -2,36 +2,51 @@ const COVER_PASSWORD = "12150209"; // 표지 열 때 쓰는 비밀번호
 const ADMIN_PASSWORD = "260118"; // 관리자 인증할 때 쓸 비밀번호
 let isAdmin = false;
 
-// 💡 일기 데이터 (서버 API 연동, 로딩 전까지 쓰이는 기본값)
+// 💡 일기 데이터 (서버 API 연동, 로딩 전까지 쓰이는 기본값). 날짜당 글 1개: { content, isSecret }
 let diaryData = {
-  "2026-09-09": [
-    {
-      id: 1,
-      author: "옹심",
-      isSecret: false,
-      content: "오늘드디어 나만의 비밀 일기장 웹사이트를 만들었다!\n비밀번호를 입력해야만 들어올 수 있어서 너무 뿌듯하다. 📝"
-    },
-    {
-      id: 2,
-      author: "휴",
-      isSecret: false,
-      content: "옹심이랑 같이 일기장 만드는 중! 새로고침 해도 이제 내용이 잘 남아있다 🎉"
-    }
-  ]
+  "2026-09-09": {
+    isSecret: false,
+    content: "오늘드디어 나만의 비밀 일기장 웹사이트를 만들었다!\n비밀번호를 입력해야만 들어올 수 있어서 너무 뿌듯하다. 📝"
+  }
 };
 
 let trashData = [];
 
 let currentDate = new Date(2026, 8, 1);
 let selectedDateKey = "";
-let selectedEntryIndex = 0;
+
+// 과거 형식(날짜당 여러 글 배열)으로 저장된 데이터를 날짜당 글 1개 형식으로 변환
+function migrateDiaryData(rawDiaryData) {
+  const migrated = {};
+  for (const dateKey in rawDiaryData) {
+    const value = rawDiaryData[dateKey];
+    if (Array.isArray(value)) {
+      if (value.length === 0) continue;
+      migrated[dateKey] = {
+        content: value.map((entry) => entry.content).join("\n\n---\n\n"),
+        isSecret: value.some((entry) => entry.isSecret)
+      };
+    } else {
+      migrated[dateKey] = value;
+    }
+  }
+  return migrated;
+}
+
+function migrateTrashData(rawTrashData) {
+  return (rawTrashData || []).map((item) => ({
+    originalDate: item.originalDate,
+    content: item.content,
+    isSecret: !!item.isSecret
+  }));
+}
 
 async function loadDataFromServer() {
   try {
     const response = await fetch("/api/diary");
     const state = await response.json();
-    diaryData = state.diaryData || {};
-    trashData = state.trashData || [];
+    diaryData = migrateDiaryData(state.diaryData || {});
+    trashData = migrateTrashData(state.trashData || []);
   } catch (e) {
     console.error("일기 데이터를 불러오지 못했습니다.", e);
     alert("⚠️ 서버에서 일기를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.");
@@ -118,18 +133,15 @@ function updateAdminUI() {
   const actionButtons = document.getElementById("actionButtons");
   const secretListBtn = document.getElementById("secretListBtn");
   const trashListBtn = document.getElementById("trashListBtn");
-  const viewWriteBtn = document.getElementById("viewWriteBtn");
 
   if (isAdmin) {
     actionButtons.style.display = "flex";
     secretListBtn.style.display = "flex";
     trashListBtn.style.display = "flex";
-    viewWriteBtn.style.display = "none";
   } else {
     actionButtons.style.display = "none";
     secretListBtn.style.display = "none";
     trashListBtn.style.display = "none";
-    viewWriteBtn.style.display = "flex";
     switchTab('calendar');
   }
   renderCalendar();
@@ -138,8 +150,9 @@ function updateAdminUI() {
 
 function openNewEntryFromView() {
   const dateKey = selectedDateKey;
+  const hasEntry = !!diaryData[dateKey];
   closeViewModal();
-  openWriteModal(dateKey);
+  openWriteModal(dateKey, hasEntry);
 }
 
 // 🐻 곰 그림을 길게 누르면(0.6초) 관리자 인증/해제가 트리거되는 숨겨진 진입점
@@ -223,34 +236,30 @@ function renderCalendar() {
     const dateKey = `${year}-${formattedMonth}-${formattedDate}`;
 
     let innerHTML = `<div class="date-num">${date}</div>`;
-    
-    const anniList = getAnniversaries(year, month + 1, date);
 
-    if ((diaryData[dateKey] && diaryData[dateKey].length > 0) || anniList.length > 0) {
+    const anniList = getAnniversaries(year, month + 1, date);
+    const entry = diaryData[dateKey];
+
+    if (entry || anniList.length > 0) {
       innerHTML += `<div class="badge-container">`;
-      
+
       anniList.forEach(anni => {
         innerHTML += `<div class="entry-badge" style="background-color: #fff2cc; color: #8c6239; font-weight: bold;">${anni}</div>`;
       });
 
-      if (diaryData[dateKey]) {
-        diaryData[dateKey].forEach(item => {
-          if (item.isSecret) {
-            innerHTML += `<div class="entry-badge secret">🔒 비밀글</div>`;
-          } else if (item.author === "옹심") {
-            innerHTML += `<div class="entry-badge ong">🐾 옹심</div>`;
-          } else {
-            innerHTML += `<div class="entry-badge hue">🌿 휴</div>`;
-          }
-        });
+      if (entry) {
+        if (entry.isSecret) {
+          innerHTML += `<div class="entry-badge secret">🔒 비밀글</div>`;
+        } else {
+          innerHTML += `<div class="entry-badge paw">🐾</div>`;
+        }
       }
 
       innerHTML += `</div>`;
     }
 
     cell.innerHTML = innerHTML;
-    // 💡 openViewModal 매개변수 호환성 수정
-    cell.onclick = () => openViewModal(dateKey, 0);
+    cell.onclick = () => openViewModal(dateKey);
     calendarDates.appendChild(cell);
   }
 }
@@ -299,89 +308,51 @@ function onSelectYearMonthChange() {
 }
 
 // ==========================================
-// 📖 일기 및 일정 상세보기 모달 (개선)
+// 📖 일기 및 일정 상세보기 모달
 // ==========================================
-function openViewModal(dateKey, index = 0) {
+function openViewModal(dateKey) {
   selectedDateKey = dateKey;
-  selectedEntryIndex = index;
 
   const year = parseInt(dateKey.split('-')[0]);
   const month = parseInt(dateKey.split('-')[1]);
   const day = parseInt(dateKey.split('-')[2]);
 
   const anniList = getAnniversaries(year, month, day);
-  const entries = diaryData[dateKey] || [];
+  const entry = diaryData[dateKey];
 
   // 1. 일기도 없고 기념일도 없으면 바로 일기 작성창으로
-  if (entries.length === 0 && anniList.length === 0) {
+  if (!entry && anniList.length === 0) {
     openWriteModal(dateKey);
     return;
   }
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
 
-  const authorTabs = document.getElementById("authorTabs");
-  authorTabs.innerHTML = "";
+  const modalInfo = document.getElementById("modalInfo");
+  modalInfo.innerHTML = "";
 
   // 2. 기념일 박스 표시
   if (anniList.length > 0) {
     const anniBox = document.createElement("div");
     anniBox.style.cssText = "background-color: #fff8e7; border: 1px dashed #e5c158; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; font-size: 1.1rem; color: #8c6239; font-weight: bold;";
     anniBox.innerHTML = `🎉 Today: ${anniList.join(' / ')}`;
-    authorTabs.appendChild(anniBox);
+    modalInfo.appendChild(anniBox);
   }
 
-  // 3. 일기가 있는 경우 작성자 탭 및 내용 표시
-  const editBtn = document.getElementById("editBtn");
   const deleteBtn = document.getElementById("deleteBtn");
 
-  if (entries.length > 0) {
-    const tabContainer = document.createElement("div");
-    tabContainer.style.cssText = "display: flex; gap: 8px; margin-bottom: 10px;";
+  if (entry) {
+    deleteBtn.style.display = isAdmin ? "inline-block" : "none";
 
-    entries.forEach((item, idx) => {
-      const tabBtn = document.createElement("button");
-      tabBtn.className = `author-tab-btn ${idx === index ? 'active' : ''}`;
-      tabBtn.innerText = item.isSecret && !isAdmin ? "🔒 비밀글" : `✍️ ${item.author}`;
-      
-      // 💡 [수정된 핵심 부분] 불필요한 date 인자를 떼고 index만 정확히 넘겨줍니다.
-      tabBtn.onclick = () => openViewModal(dateKey, idx);
-      
-      tabContainer.appendChild(tabBtn);
-    });
-    authorTabs.appendChild(tabContainer);
-
-    const item = entries[index];
-
-    if (isAdmin) {
-      editBtn.style.display = "inline-block";
-      deleteBtn.style.display = "inline-block";
+    if (entry.isSecret && !isAdmin) {
+      document.getElementById("viewModalText").innerText = "🔒 이 글은 비밀글입니다.\n관리자 인증 후에만 볼 수 있습니다.";
     } else {
-      editBtn.style.display = "none";
-      deleteBtn.style.display = "none";
-    }
-
-    if (item.isSecret && !isAdmin) {
-      document.getElementById("viewModalText").innerText = "🔒 이 글은 비밀글입니다.\n하단의 '관리자 인증' 버튼을 누르고 로그인해야 볼 수 있습니다.";
-    } else {
-      document.getElementById("viewModalText").innerText = item.content;
+      document.getElementById("viewModalText").innerText = entry.content;
     }
   } else {
-    // 4. 일기는 없고 기념일만 있는 경우
+    // 3. 일기는 없고 기념일만 있는 경우
     document.getElementById("viewModalText").innerText = "이 날에 등록된 일기가 아직 없습니다.";
-    editBtn.style.display = "none";
     deleteBtn.style.display = "none";
-
-    // 일기 추가 버튼 생성
-    const addDiaryBtn = document.createElement("button");
-    addDiaryBtn.className = "btn-main";
-    addDiaryBtn.style.cssText = "margin-top: 10px; font-size: 1.1rem; padding: 6px 14px;";
-    addDiaryBtn.innerText = "✏️ 일기 추가하기";
-    addDiaryBtn.onclick = () => {
-      closeViewModal();
-      openWriteModal(dateKey);
-    };
-    authorTabs.appendChild(addDiaryBtn);
   }
 
   document.getElementById("viewModalOverlay").style.display = "flex";
@@ -395,20 +366,16 @@ function openWriteModal(targetDateKey = "", isEdit = false) {
   const titleElement = document.getElementById("writeModalTitle");
   const dateInput = document.getElementById("inputDate");
 
-  if (isEdit && diaryData[targetDateKey] && diaryData[targetDateKey][selectedEntryIndex]) {
-    const item = diaryData[targetDateKey][selectedEntryIndex];
+  if (isEdit && diaryData[targetDateKey]) {
+    const entry = diaryData[targetDateKey];
     titleElement.innerText = "✏️ 일기 수정하기";
     dateInput.value = targetDateKey;
     dateInput.disabled = true;
-    document.getElementById("inputAuthor").value = item.author;
-    document.getElementById("inputIsSecret").value = item.isSecret ? "true" : "false";
-    document.getElementById("inputContent").value = item.content;
+    document.getElementById("inputContent").value = entry.content;
   } else {
     titleElement.innerText = "✏️ 새 일기 작성하기";
     dateInput.disabled = false;
     dateInput.value = targetDateKey || new Date().toISOString().substring(0, 10);
-    document.getElementById("inputAuthor").value = "옹심";
-    document.getElementById("inputIsSecret").value = "false";
     document.getElementById("inputContent").value = "";
   }
 
@@ -421,20 +388,15 @@ function closeWriteModal() {
   document.getElementById("inputDate").disabled = false;
 }
 
-function editCurrentDiary() {
-  closeViewModal();
-  openWriteModal(selectedDateKey, true);
-}
-
 function deleteCurrentDiary() {
   if (confirm("이 일기를 삭제하시겠습니까? (삭제된 일기는 휴지통으로 이동합니다.)")) {
-    const deletedItem = diaryData[selectedDateKey].splice(selectedEntryIndex, 1)[0];
-    deletedItem.originalDate = selectedDateKey;
-    trashData.push(deletedItem);
-
-    if (diaryData[selectedDateKey].length === 0) {
-      delete diaryData[selectedDateKey];
-    }
+    const deletedEntry = diaryData[selectedDateKey];
+    trashData.push({
+      originalDate: selectedDateKey,
+      content: deletedEntry.content,
+      isSecret: deletedEntry.isSecret
+    });
+    delete diaryData[selectedDateKey];
 
     saveDataToStorage();
     alert("🗑️ 일기가 휴지통으로 이동했습니다.");
@@ -445,8 +407,6 @@ function deleteCurrentDiary() {
 
 function saveDiary() {
   const date = document.getElementById("inputDate").value;
-  const author = document.getElementById("inputAuthor").value;
-  const isSecret = document.getElementById("inputIsSecret").value === "true";
   const content = document.getElementById("inputContent").value;
 
   if (!date || !content.trim()) {
@@ -454,29 +414,30 @@ function saveDiary() {
     return;
   }
 
-  if (!diaryData[date]) {
-    diaryData[date] = [];
-  }
-
   const isEditMode = document.getElementById("inputDate").disabled;
+  const existingIsSecret = diaryData[date] ? diaryData[date].isSecret : false;
 
-  if (isEditMode) {
-    diaryData[date][selectedEntryIndex] = { author, isSecret, content };
-  } else {
-    const existingIdx = diaryData[date].findIndex(item => item.author === author);
-    if (existingIdx !== -1) {
-      if (!confirm(`${author}님이 작성한 일기가 이미 존재합니다. 해당 일기를 덮어씌울까요?`)) {
-        return;
-      }
-      diaryData[date][existingIdx] = { author, isSecret, content };
-    } else {
-      diaryData[date].push({ author, isSecret, content });
+  if (!isEditMode && diaryData[date]) {
+    if (!confirm("이미 작성된 일기가 있습니다. 내용을 덮어씌울까요?")) {
+      return;
     }
   }
+
+  diaryData[date] = { content, isSecret: existingIsSecret };
 
   saveDataToStorage();
   alert("🎉 일기가 잘 저장되었습니다!");
   closeWriteModal();
+  renderCalendar();
+}
+
+// 관리자: 공개/비밀 전환
+function toggleSecretStatus(dateKey) {
+  const entry = diaryData[dateKey];
+  if (!entry) return;
+  entry.isSecret = !entry.isSecret;
+  saveDataToStorage();
+  renderAdminSection();
   renderCalendar();
 }
 
@@ -485,26 +446,29 @@ function renderAdminSection() {
   const trashList = document.getElementById("trashList");
 
   secretList.innerHTML = "";
-  let secretCount = 0;
+  const dateKeys = Object.keys(diaryData).sort();
 
-  for (let dateKey in diaryData) {
-    diaryData[dateKey].forEach((item, idx) => {
-      if (item.isSecret) {
-        secretCount++;
-        const card = document.createElement("div");
-        card.className = "admin-card";
-        card.innerHTML = `
-          <div class="admin-card-info">
-            <strong>[${dateKey}]</strong> ${item.author}님의 비밀글
-            <br><small style="color:#666;">${item.content.substring(0, 20)}...</small>
-          </div>
-          <button class="btn-edit" onclick="openViewModal('${dateKey}', '${dateKey.split('-')[2]}', ${idx})">보기</button>
-        `;
-        secretList.appendChild(card);
-      }
+  if (dateKeys.length === 0) {
+    secretList.innerHTML = "<p style='color:#888;'>작성된 일기가 없습니다.</p>";
+  } else {
+    dateKeys.forEach((dateKey) => {
+      const item = diaryData[dateKey];
+      const card = document.createElement("div");
+      card.className = "admin-card";
+      const statusBadge = item.isSecret
+        ? `<span class="status-badge secret">🔒 비밀</span>`
+        : `<span class="status-badge public">🌐 공개</span>`;
+      const toggleLabel = item.isSecret ? "🌐 공개로 전환" : "🔒 비밀로 전환";
+      card.innerHTML = `
+        <div class="admin-card-info">
+          <strong>[${dateKey}]</strong> ${statusBadge}
+          <br><small style="color:#666;">${item.content.substring(0, 20)}...</small>
+        </div>
+        <button class="btn-toggle-secret" onclick="toggleSecretStatus('${dateKey}')">${toggleLabel}</button>
+      `;
+      secretList.appendChild(card);
     });
   }
-  if (secretCount === 0) secretList.innerHTML = "<p style='color:#888;'>비밀글이 없습니다.</p>";
 
   trashList.innerHTML = "";
   if (trashData.length === 0) {
@@ -515,7 +479,7 @@ function renderAdminSection() {
       card.className = "admin-card";
       card.innerHTML = `
         <div class="admin-card-info">
-          <strong>[${item.originalDate}]</strong> ${item.author}님의 일기 (삭제됨)
+          <strong>[${item.originalDate}]</strong> 삭제된 일기
         </div>
         <div>
           <button class="btn-restore" onclick="restoreDiary(${idx})">🔄 복구</button>
@@ -531,9 +495,7 @@ function restoreDiary(trashIndex) {
   const restoredItem = trashData.splice(trashIndex, 1)[0];
   const dateKey = restoredItem.originalDate;
 
-  if (!diaryData[dateKey]) diaryData[dateKey] = [];
-  delete restoredItem.originalDate;
-  diaryData[dateKey].push(restoredItem);
+  diaryData[dateKey] = { content: restoredItem.content, isSecret: restoredItem.isSecret };
 
   saveDataToStorage();
   alert("🔄 일기가 복구되었습니다!");

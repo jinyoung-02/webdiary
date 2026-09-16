@@ -4,20 +4,10 @@ const STATE_KEY = 'oong_diary_state';
 
 const DEFAULT_STATE = {
   diaryData: {
-    '2026-09-09': [
-      {
-        id: 1,
-        author: '옹심',
-        isSecret: false,
-        content: '오늘드디어 나만의 비밀 일기장 웹사이트를 만들었다!\n비밀번호를 입력해야만 들어올 수 있어서 너무 뿌듯하다. 📝'
-      },
-      {
-        id: 2,
-        author: '휴',
-        isSecret: false,
-        content: '옹심이랑 같이 일기장 만드는 중! 새로고침 해도 이제 내용이 잘 남아있다 🎉'
-      }
-    ]
+    '2026-09-09': {
+      isSecret: false,
+      content: '오늘드디어 나만의 비밀 일기장 웹사이트를 만들었다!\n비밀번호를 입력해야만 들어올 수 있어서 너무 뿌듯하다. 📝'
+    }
   },
   trashData: []
 };
