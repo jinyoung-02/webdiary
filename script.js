@@ -387,7 +387,9 @@ function openViewModal(dateKey) {
   const entry = diaryData[dateKey];
 
   document.getElementById("viewModalDate").innerText = `${year}년 ${month}월 ${day}일`;
-  document.getElementById("viewWriteBtn").style.display = entry ? "none" : "flex";
+  const viewWriteBtn = document.getElementById("viewWriteBtn");
+  viewWriteBtn.style.display = (!entry || isAdmin) ? "flex" : "none";
+  viewWriteBtn.title = entry ? "수정" : "새 일기 쓰기";
 
   const modalInfo = document.getElementById("modalInfo");
   modalInfo.innerHTML = "";
