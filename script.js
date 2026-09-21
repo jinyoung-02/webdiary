@@ -463,82 +463,20 @@ function setupSwipeNavigation() {
 
 setupSwipeNavigation();
 
-// 📅 날짜 선택용 년/월/일 드롭다운 (모바일 네이티브 date input 대신 사용)
-function populateWriteDaySelect(year, month, selectedDay) {
-  const daySelect = document.getElementById("inputDay");
-  const lastDate = new Date(year, month, 0).getDate();
-  const keepDay = Math.min(selectedDay, lastDate);
-
-  daySelect.innerHTML = "";
-  for (let day = 1; day <= lastDate; day++) {
-    const opt = document.createElement("option");
-    opt.value = day;
-    opt.textContent = `${day}일`;
-    if (day === keepDay) opt.selected = true;
-    daySelect.appendChild(opt);
-  }
-}
-
-function populateWriteDateSelects(dateKey) {
-  const [y, m, d] = dateKey.split('-').map(Number);
-  const yearSelect = document.getElementById("inputYear");
-  const monthSelect = document.getElementById("inputMonth");
-
-  yearSelect.innerHTML = "";
-  for (let year = 2020; year <= 2030; year++) {
-    const opt = document.createElement("option");
-    opt.value = year;
-    opt.textContent = `${year}년`;
-    if (year === y) opt.selected = true;
-    yearSelect.appendChild(opt);
-  }
-
-  monthSelect.innerHTML = "";
-  for (let month = 1; month <= 12; month++) {
-    const opt = document.createElement("option");
-    opt.value = month;
-    opt.textContent = `${month}월`;
-    if (month === m) opt.selected = true;
-    monthSelect.appendChild(opt);
-  }
-
-  populateWriteDaySelect(y, m, d);
-}
-
-function onWriteDateSelectChange() {
-  const year = parseInt(document.getElementById("inputYear").value, 10);
-  const month = parseInt(document.getElementById("inputMonth").value, 10);
-  const currentDay = parseInt(document.getElementById("inputDay").value, 10) || 1;
-  populateWriteDaySelect(year, month, currentDay);
-}
-
-function getWriteSelectedDateKey() {
-  const y = document.getElementById("inputYear").value;
-  const m = String(document.getElementById("inputMonth").value).padStart(2, '0');
-  const d = String(document.getElementById("inputDay").value).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-function setWriteDateSelectsDisabled(disabled) {
-  document.getElementById("inputYear").disabled = disabled;
-  document.getElementById("inputMonth").disabled = disabled;
-  document.getElementById("inputDay").disabled = disabled;
-}
-
 function openWriteModal(targetDateKey = "", isEdit = false) {
   const titleElement = document.getElementById("writeModalTitle");
-  const dateKey = targetDateKey || new Date().toISOString().substring(0, 10);
-
-  populateWriteDateSelects(dateKey);
+  const dateInput = document.getElementById("inputDate");
 
   if (isEdit && diaryData[targetDateKey]) {
     const entry = diaryData[targetDateKey];
     titleElement.innerText = "일기 수정하기";
-    setWriteDateSelectsDisabled(true);
+    dateInput.value = targetDateKey;
+    dateInput.disabled = true;
     document.getElementById("inputContent").value = entry.content;
   } else {
     titleElement.innerText = "새 일기 작성하기";
-    setWriteDateSelectsDisabled(false);
+    dateInput.disabled = false;
+    dateInput.value = targetDateKey || new Date().toISOString().substring(0, 10);
     document.getElementById("inputContent").value = "";
   }
 
@@ -548,7 +486,7 @@ function openWriteModal(targetDateKey = "", isEdit = false) {
 function closeWriteModal() {
   document.getElementById("writeModalOverlay").style.display = "none";
   document.getElementById("inputContent").value = "";
-  setWriteDateSelectsDisabled(false);
+  document.getElementById("inputDate").disabled = false;
 }
 
 function deleteCurrentDiary() {
@@ -569,15 +507,15 @@ function deleteCurrentDiary() {
 }
 
 function saveDiary() {
-  const date = getWriteSelectedDateKey();
+  const date = document.getElementById("inputDate").value;
   const content = document.getElementById("inputContent").value;
 
-  if (!content.trim()) {
-    alert("일기 내용을 입력해 주세요!");
+  if (!date || !content.trim()) {
+    alert("날짜와 내용을 모두 입력해 주세요!");
     return;
   }
 
-  const isEditMode = document.getElementById("inputYear").disabled;
+  const isEditMode = document.getElementById("inputDate").disabled;
   const existingIsSecret = diaryData[date] ? diaryData[date].isSecret : false;
 
   if (!isEditMode && diaryData[date]) {

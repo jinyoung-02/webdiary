@@ -410,19 +410,12 @@ body {
 }
 textarea.form-control { height: 120px; resize: vertical; }
 
-.date-select-group { display: flex; gap: 8px; }
-.date-select {
-  flex: 1;
-  padding: 8px 6px;
-  font-size: 1.05rem;
-  font-family: 'Gaegu', cursive, sans-serif;
-  color: #5a4636;
-  border: 1px solid #d3c4b1;
-  border-radius: 8px;
-  background-color: #fff;
-  text-align: center;
+input.form-control[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
 }
-.date-select:disabled { background-color: #f2ebd9; color: #a89684; }
+input.form-control[type="date"]:disabled { background-color: #f2ebd9; color: #a89684; }
 
 .modal-btn-group { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; flex-shrink: 0; }
 .btn-edit { background-color: #4a7c59; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 1.1rem;}
