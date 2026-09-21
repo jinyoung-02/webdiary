@@ -102,8 +102,12 @@
       <div id="writeModalTitle" class="modal-date write-modal-title">새 일기 작성하기</div>
       
       <div class="form-group">
-        <label for="inputDate">날짜 선택</label>
-        <input type="date" id="inputDate" class="form-control">
+        <label>날짜 선택</label>
+        <div class="date-select-group">
+          <select id="inputYear" class="date-select" onchange="onWriteDateSelectChange()"></select>
+          <select id="inputMonth" class="date-select" onchange="onWriteDateSelectChange()"></select>
+          <select id="inputDay" class="date-select" onchange="onWriteDateSelectChange()"></select>
+        </div>
       </div>
 
       <div class="form-group">
