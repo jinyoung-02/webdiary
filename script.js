@@ -12,7 +12,7 @@ let diaryData = {
 
 let trashData = [];
 
-let currentDate = new Date(2026, 8, 1);
+let currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedDateKey = "";
 
 // 과거 형식(날짜당 여러 글 배열)으로 저장된 데이터를 날짜당 글 1개 형식으로 변환
