@@ -108,31 +108,44 @@ body {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8); /* 흰 테두리 효과로 가독성 확보 */
 }
 
-/* 년/월 드롭다운 그룹 */
+/* 년/월 제목: 한 줄 텍스트 위에 투명 셀렉트를 겹쳐 탭하면 선택창이 열림 */
 .calendar-title-group {
+  position: relative;
   display: flex;
-  gap: 6px;
   align-items: center;
+  justify-content: center;
 }
 
-/* 년/월 드롭다운 셀렉트 박스 스타일 */
-.year-month-select {
-  font-family: 'Gaegu', cursive, sans-serif;
-  font-size: 1.5rem;
+.calendar-title-text {
+  font-size: 1.55rem;
   font-weight: bold;
   color: #5a4636;
-  background: transparent;
-  border: none;
-  border-bottom: none;
-  padding: 2px 4px;
-  cursor: pointer;
-  outline: none;
-  text-align: center;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
-.year-month-select:hover {
-  color: #b5835a;
+.calendar-title-caret {
+  font-size: 0.7rem;
+  color: #b5a08c;
+  margin-left: 2px;
 }
+
+.year-month-select {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+}
+
+#selectYear { left: 0; }
+#selectMonth { right: 0; }
 
 /* 3. 상단 및 하단 버튼 배경 투명감 주기 */
 .calendar-header h2 {
@@ -159,27 +172,25 @@ body {
 .calendar-header h2 { margin: 0; color: #5a4636; font-size: 1.8rem; }
 
 .nav-btn {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid #d3c4b1;
-  border-radius: 50%;           /* 👈 완벽한 동그라미 모양 */
-  width: 32px;
-  height: 32px;
+  background: none;
+  border: none;
+  width: 44px;
+  height: 44px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 1.7rem;
+  line-height: 1;
   cursor: pointer;
-  color: #5a4636;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  color: #b5a08c;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.nav-btn:hover {
-  background-color: #b5835a;
-  color: white;
-  border-color: #b5835a;
-  transform: scale(1.08);       /* 👈 마우스 올리면 살짝 큼직해짐 */
+@media (hover: hover) {
+  .nav-btn:hover { color: #b5835a; }
 }
+
+.nav-btn:active { color: #b5835a; }
 
 .calendar-grid {
   display: grid;

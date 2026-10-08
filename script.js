@@ -335,6 +335,30 @@ function changeMonth(delta) {
   renderCalendar();
 }
 
+// 📱 달력 영역을 좌우로 스와이프하면 이전/다음 달로 이동
+function setupCalendarSwipe() {
+  const section = document.getElementById("calendarSection");
+  if (!section) return;
+
+  let startX = 0;
+  let startY = 0;
+
+  section.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  section.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      changeMonth(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+}
+
+setupCalendarSwipe();
+
 // 📅 년/월 직접 선택 이동 함수
 // 1. 년도(2020~2030) 및 월(1~12월) 드롭다운 옵션 생성 & 갱신
 function updateSelectOptions(currentYear, currentMonth) {
@@ -342,6 +366,9 @@ function updateSelectOptions(currentYear, currentMonth) {
   const selectMonth = document.getElementById("selectMonth");
 
   if (!selectYear || !selectMonth) return;
+
+  const titleText = document.getElementById("calendarTitleText");
+  if (titleText) titleText.textContent = `${currentYear}년 ${currentMonth + 1}월`;
 
   // 년도 옵션 (2020년 ~ 2030년)
   selectYear.innerHTML = "";

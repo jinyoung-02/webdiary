@@ -26,12 +26,13 @@
       <!-- 달력 영역 -->
       <div id="calendarSection">
       <div class="calendar-header">
-        <button class="nav-btn" onclick="changeMonth(-1)" title="이전달">❮</button>
+        <button class="nav-btn" onclick="changeMonth(-1)" title="이전달">‹</button>
         <div class="calendar-title-group">
-          <select id="selectYear" class="year-month-select" onchange="onSelectYearMonthChange()"></select>
-          <select id="selectMonth" class="year-month-select" onchange="onSelectYearMonthChange()"></select>
+          <span class="calendar-title-text"><span id="calendarTitleText"></span><span class="calendar-title-caret">▾</span></span>
+          <select id="selectYear" class="year-month-select" onchange="onSelectYearMonthChange()" aria-label="연도 선택"></select>
+          <select id="selectMonth" class="year-month-select" onchange="onSelectYearMonthChange()" aria-label="월 선택"></select>
         </div>
-          <button class="nav-btn" onclick="changeMonth(1)" title="다음달">❯</button>
+        <button class="nav-btn" onclick="changeMonth(1)" title="다음달">›</button>
       </div>
 
         <div class="calendar-grid">
