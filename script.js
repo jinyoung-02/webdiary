@@ -47,10 +47,20 @@ async function loadDataFromServer() {
     const state = await response.json();
     diaryData = migrateDiaryData(state.diaryData || {});
     trashData = migrateTrashData(state.trashData || []);
+    return true;
   } catch (e) {
     console.error("일기 데이터를 불러오지 못했습니다.", e);
-    alert("⚠️ 서버에서 일기를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.");
+    return false;
   }
+}
+
+// 페이지가 열리자마자 데이터를 미리 받아두면, 비밀번호를 입력하는 동안 로딩이 끝나 입장이 즉시 이루어짐
+let diaryLoadPromise = loadDataFromServer();
+
+async function ensureDiaryLoaded() {
+  let ok = await diaryLoadPromise;
+  if (!ok) ok = await loadDataFromServer();
+  if (!ok) alert("⚠️ 서버에서 일기를 불러오지 못했습니다. 인터넷 연결을 확인해주세요.");
 }
 
 async function saveDataToStorage() {
@@ -94,7 +104,7 @@ function getAnniversaries(year, month, date) {
 // ==========================================
 function openDiary() {
   showPasswordPrompt("Hint: 🧸♥️", COVER_PASSWORD, async () => {
-    await loadDataFromServer();
+    await ensureDiaryLoaded();
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     updateAdminUI();
