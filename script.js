@@ -102,12 +102,23 @@ function getAnniversaries(year, month, date) {
 // ==========================================
 // 🔒 화면 제어 및 관리자 인증
 // ==========================================
+let toastTimer = null;
+
+function showToast(message, duration = 1600) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), duration);
+}
+
 function openDiary() {
   showPasswordPrompt("Hint: 🧸♥️", COVER_PASSWORD, async () => {
     await ensureDiaryLoaded();
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     updateAdminUI();
+    showToast("Hi, 🧸♥️");
   });
 }
 
