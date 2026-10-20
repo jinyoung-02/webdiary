@@ -108,7 +108,6 @@ function openDiary() {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     updateAdminUI();
-    alert("Hi, 🧸♥️");
   });
 }
 
