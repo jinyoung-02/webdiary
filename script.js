@@ -93,12 +93,12 @@ function getAnniversaries(year, month, date) {
 // 🔒 화면 제어 및 관리자 인증
 // ==========================================
 function openDiary() {
-  showPasswordPrompt("Hint: 휴 사랑해", COVER_PASSWORD, async () => {
+  showPasswordPrompt("Hint: 🧸♥️", COVER_PASSWORD, async () => {
     await loadDataFromServer();
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     updateAdminUI();
-    alert("Hi, my Luv🧸♥️");
+    alert("Hi, 🧸♥️");
   });
 }
 
