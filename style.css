@@ -31,7 +31,7 @@ body {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4.3; /* 표지 비율 유지 */
-  background-image: url('cover.jpg');
+  background-image: url('bear.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
