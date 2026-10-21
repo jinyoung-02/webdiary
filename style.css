@@ -535,3 +535,147 @@ input.form-control[type="date"]:disabled { background-color: #f2ebd9; color: #a8
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* ===== 목차(홈) 화면 ===== */
+.home-section, .board-section { display: none; text-align: left; }
+
+.home-header { text-align: center; margin: 10px 0 24px; }
+.home-emoji { font-size: 2.2rem; }
+.home-title { font-size: 1.5rem; font-weight: bold; color: #5a4636; }
+
+.home-tile {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: #f7f1e6;
+  border: none;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.home-tile:active { background-color: #efe5d3; }
+.home-tile-icon { font-size: 2rem; }
+.home-tile-text { display: flex; flex-direction: column; }
+.home-tile-title { font-size: 1.4rem; font-weight: bold; color: #5a4636; }
+.home-tile-desc { font-size: 1rem; color: #a89684; }
+
+.btn-back-tight { margin-bottom: 6px; }
+
+/* ===== 팬보드 ===== */
+.board-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.board-title { font-size: 1.6rem; font-weight: bold; color: #5a4636; margin-bottom: 12px; }
+
+.board-filter { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.board-chip {
+  background: #f7f1e6;
+  color: #8c735d;
+  border: none;
+  border-radius: 16px;
+  padding: 4px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.board-chip.active { background: #b5835a; color: #fff; }
+
+.board-list { min-height: 120px; }
+.board-empty { color: #a89684; text-align: center; padding: 30px 0; font-size: 1.1rem; }
+
+.board-card {
+  background: #fffdf9;
+  border: 1px solid #ebdccb;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.board-card-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; color: #a89684; font-size: 0.95rem; }
+.board-card-title { font-size: 1.2rem; font-weight: bold; color: #5a4636; margin-bottom: 2px; }
+.board-card-preview {
+  font-size: 1.05rem;
+  color: #5a4636;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-line;
+}
+.board-thumbs { display: flex; gap: 6px; margin-top: 10px; }
+.board-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #f2ebd9;
+  position: relative;
+}
+.board-thumb-more {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  background: #f2ebd9;
+  color: #8c735d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.board-tag {
+  display: inline-block;
+  background: #f2ebd9;
+  color: #8c735d;
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 0.9rem;
+}
+
+.board-view-title { font-size: 1.35rem; font-weight: bold; color: #5a4636; margin-bottom: 8px; }
+.board-edit-btn { color: #8c735d; }
+
+.board-photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+.board-photo-grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; cursor: zoom-in; background: #f2ebd9; }
+
+.board-tag-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.board-photo-count { color: #b5a08c; font-size: 0.9rem; }
+.board-photo-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.board-photo-item { position: relative; width: 72px; height: 72px; }
+.board-photo-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+.board-photo-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: #5a4636;
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.board-photo-add {
+  background: #f7f1e6;
+  color: #8c735d;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.photo-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+}
+.photo-lightbox img { max-width: 94%; max-height: 90%; border-radius: 8px; }

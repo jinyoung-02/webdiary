@@ -118,6 +118,7 @@ function openDiary() {
     document.getElementById("lockScreen").style.display = "none";
     document.getElementById("diaryMainContent").style.display = "block";
     updateAdminUI();
+    switchTab('home');
     showToast("Hi, 🧸♥️");
   });
 }
@@ -228,7 +229,7 @@ function updateAdminUI() {
     actionButtons.style.display = "none";
     secretListBtn.style.display = "none";
     trashListBtn.style.display = "none";
-    switchTab('calendar');
+    if (currentTab === 'secret' || currentTab === 'trash') switchTab('calendar');
   }
   renderCalendar();
   renderAdminSection();
@@ -271,16 +272,33 @@ function setupAdminHotspot() {
 
 setupAdminHotspot();
 
+let currentTab = 'home';
+
 function switchTab(tabName) {
-  const calendarSection = document.getElementById("calendarSection");
-  const secretSection = document.getElementById("secretSection");
-  const trashSection = document.getElementById("trashSection");
+  currentTab = tabName;
 
-  calendarSection.style.display = tabName === 'calendar' ? "block" : "none";
-  secretSection.style.display = tabName === 'secret' ? "block" : "none";
-  trashSection.style.display = tabName === 'trash' ? "block" : "none";
+  const sections = {
+    home: "homeSection",
+    calendar: "calendarSection",
+    board: "boardSection",
+    secret: "secretSection",
+    trash: "trashSection"
+  };
+  Object.keys(sections).forEach((key) => {
+    document.getElementById(sections[key]).style.display = key === tabName ? "block" : "none";
+  });
 
-  if (tabName !== 'calendar') {
+  // 곰 그림 롱프레스(관리자 진입)는 달력 화면에서만 동작
+  document.getElementById("adminHotspot").style.display = tabName === 'calendar' ? "block" : "none";
+
+  const diaryMain = document.getElementById("diaryMainContent");
+  if (tabName === 'calendar') {
+    renderCalendar();
+  } else {
+    diaryMain.style.backgroundImage = "none";
+  }
+
+  if (tabName === 'secret' || tabName === 'trash') {
     renderAdminSection();
   }
 }
@@ -297,7 +315,7 @@ function renderCalendar() {
 
   // 🖼️ 2. 월별 속지 배경 동적 변경
   const diaryMain = document.getElementById("diaryMainContent");
-  if (diaryMain) {
+  if (diaryMain && currentTab === 'calendar') {
     diaryMain.style.backgroundImage = `url('bg_${month + 1}.png')`;
   }
 
