@@ -7,7 +7,7 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
   <!-- 💡 style.css 연결 -->
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -22,43 +22,9 @@
 
     <!-- 2. 일기장 메인 공간 -->
     <div id="diaryMainContent" class="diary-main-content">
-
-      <!-- 목차(홈) 화면 -->
-      <div id="homeSection" class="home-section">
-        <div class="home-header">
-          <div class="home-emoji">🧸</div>
-          <div class="home-title">Dear My Bear</div>
-        </div>
-        <button class="home-tile" onclick="switchTab('calendar')">
-          <span class="home-tile-icon">📅</span>
-          <span class="home-tile-text">
-            <span class="home-tile-title">달력</span>
-            <span class="home-tile-desc">날짜별 일기장</span>
-          </span>
-        </button>
-        <button class="home-tile" onclick="openBoard()">
-          <span class="home-tile-icon">💌</span>
-          <span class="home-tile-text">
-            <span class="home-tile-title">팬보드</span>
-            <span class="home-tile-desc">스푼 글 모음 · 사진</span>
-          </span>
-        </button>
-      </div>
-
-      <!-- 팬보드 화면 -->
-      <div id="boardSection" class="board-section">
-        <div class="board-topbar">
-          <button class="btn-back btn-back-tight" onclick="switchTab('home')">‹ 목차</button>
-          <button class="btn-icon-small" onclick="openBoardWrite()" title="글 쓰기">＋</button>
-        </div>
-        <div class="board-title">💌 팬보드</div>
-        <div id="boardFilter" class="board-filter"></div>
-        <div id="boardList" class="board-list"></div>
-      </div>
-
+      
       <!-- 달력 영역 -->
       <div id="calendarSection">
-      <button class="btn-back btn-back-tight" onclick="switchTab('home')">‹ 목차</button>
       <div class="calendar-header">
         <button class="nav-btn" onclick="changeMonth(-1)" title="이전달">‹</button>
         <div class="calendar-title-group">
@@ -153,68 +119,6 @@
     </div>
   </div>
 
-  <!-- 팬보드 글 보기 모달 -->
-  <div id="boardViewOverlay" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-date-row">
-        <div class="modal-date-nav">
-          <div id="boardViewDate" class="modal-date"></div>
-          <span id="boardViewTag" class="board-tag"></span>
-        </div>
-      </div>
-      <div class="modal-scroll-area">
-        <div id="boardViewTitle" class="board-view-title"></div>
-        <div id="boardViewText" class="modal-text"></div>
-        <div id="boardViewPhotos" class="board-photo-grid"></div>
-      </div>
-      <div class="modal-btn-group">
-        <button id="boardEditBtn" class="btn-delete-text board-edit-btn" onclick="editCurrentBoardPost()" style="display:none;">수정</button>
-        <button id="boardDeleteBtn" class="btn-delete-text" onclick="deleteCurrentBoardPost()" style="display:none;">삭제</button>
-        <button class="btn-close-pill" onclick="closeBoardView()">닫기</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 팬보드 글쓰기 / 수정 모달 -->
-  <div id="boardWriteOverlay" class="modal-overlay">
-    <div class="modal-card">
-      <div id="boardWriteTitle" class="modal-date write-modal-title">팬보드 글쓰기</div>
-      <div class="modal-scroll-area">
-        <div class="form-group">
-          <label for="boardInputDate">날짜</label>
-          <input type="date" id="boardInputDate" class="form-control">
-        </div>
-        <div class="form-group">
-          <label>구분</label>
-          <div id="boardTagPicker" class="board-tag-picker"></div>
-        </div>
-        <div class="form-group">
-          <label for="boardInputTitle">제목 (선택)</label>
-          <input type="text" id="boardInputTitle" class="form-control" maxlength="80" placeholder="제목을 적어도 되고, 비워도 돼요">
-        </div>
-        <div class="form-group">
-          <label for="boardInputContent">내용</label>
-          <textarea id="boardInputContent" class="form-control" placeholder="스푼 팬보드 글이나 남기고 싶은 말을 적어주세요"></textarea>
-        </div>
-        <div class="form-group">
-          <label>사진 <span id="boardPhotoCount" class="board-photo-count"></span></label>
-          <div id="boardPhotoPreview" class="board-photo-preview"></div>
-          <button type="button" class="board-photo-add" onclick="document.getElementById('boardPhotoInput').click()">📷 사진 추가</button>
-          <input type="file" id="boardPhotoInput" accept="image/*" multiple hidden onchange="onBoardPhotosPicked(event)">
-        </div>
-      </div>
-      <div class="modal-btn-group">
-        <button class="btn-cancel" onclick="closeBoardWrite()">취소</button>
-        <button id="boardSaveBtn" class="btn-submit" onclick="saveBoardPost()">저장하기</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 사진 크게 보기 -->
-  <div id="photoLightbox" class="photo-lightbox" onclick="closeLightbox()">
-    <img id="photoLightboxImg" alt="">
-  </div>
-
   <!-- 비밀번호 입력 모달 (표지 열기 / 관리자 인증 공용) -->
   <div id="passwordModalOverlay" class="modal-overlay">
     <div class="password-card">
@@ -230,7 +134,6 @@
   <div id="toast" class="toast"></div>
 
   <!-- 💡 script.js 연결 -->
-  <script src="script.js?v=2"></script>
-  <script src="board.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
