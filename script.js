@@ -1,4 +1,4 @@
-const COVER_PASSWORD = "6486"; // 표지 열 때 쓰는 비밀번호
+const COVER_PASSWORD = "6520"; // 표지 열 때 쓰는 비밀번호
 const ADMIN_PASSWORD = "260118"; // 관리자 인증할 때 쓸 비밀번호
 let isAdmin = false;
 
