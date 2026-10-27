@@ -72,7 +72,7 @@ body {
   
   /* 🖼️ 100% 100% 대신 contain으로 수정하여 비율 찌그러짐 방지 */
   background-size: contain;
-  background-position: center;
+  background-position: center bottom;
   background-repeat: no-repeat;
   border-radius: 18px;
 }
